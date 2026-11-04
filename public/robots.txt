@@ -1,0 +1,6 @@
+# Google und anderen Suchmaschinen erlauben, die Seite zu durchsuchen
+# und zu indizieren. 
+# https://developers.google.com/crawling/docs/robots-txt/create-robots-txt?hl=de
+# https://www.alanwsmith.com/en/37/wa/jz/s1/ 
+User-agent: *
+Allow: /

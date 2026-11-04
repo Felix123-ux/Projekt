@@ -1,0 +1,79 @@
+:root {
+	--default-line-height: 1.5;
+	--reduced-line-height: 1.2;
+	--max-text-length: 60ch;
+	--max-heading-length: 40ch;
+}
+
+:where(
+	.h1,
+	h1,
+	.h2,
+	h2,
+	.h3,
+	h3,
+	.h4,
+	h4,
+	.h5,
+	h5,
+	button,
+	input,
+	label,
+	legend,
+	summary
+) {
+	line-height: var(--reduced-line-height);
+}
+
+:where(
+	body,
+	button,
+	input,
+	select,
+	optgroup,
+	textarea,
+	header,
+	footer,
+	div,
+	p
+) {
+	color: var(--theme-text-color);
+	font-family: var(--theme-body-font);
+	font-size: var(--step-0);
+	line-height: var(--default-line-height);
+}
+
+main :where(p) {
+	max-inline-size: var(--max-text-length);
+}
+
+:where(p) {
+	text-wrap: pretty;
+}
+
+:where(p, a) {
+	overflow-wrap: break-word;
+}
+
+html {
+	/* https://chriscoyier.net/2023/11/27/the-hanging-punctuation-property-in-css/
+      https://css-tricks.com/almanac/properties/h/hanging-punctuation/	*/
+	hanging-punctuation: first allow-end last;
+
+	/* https://adactio.com/journal/21027 */
+
+	input,
+	textarea {
+		hanging-punctuation: none;
+	}
+}
+
+body {
+	/* https://dbushell.com/2024/11/05/webkit-font-smoothing/ */
+	-webkit-font-smoothing: antialiased;
+}
+
+/* https://developer.chrome.com/blog/css-text-box-trim */
+.trimmed-text {
+	text-box: trim-both cap alphabetic;
+}

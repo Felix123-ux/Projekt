@@ -1,0 +1,11 @@
+@custom-media --reduced-motion (prefers-reduced-motion: reduce);
+@custom-media --default-motion (prefers-reduced-motion: no-preference);
+
+@custom-media --large (width >= 50rem);
+@custom-media --medium (32rem < width < 50rem);
+@custom-media --small (width <= 32rem);
+@custom-media --small-medium (width <= 50rem);
+@custom-media --medium-large (width > 32rem);
+
+@custom-media --expanded-menu (width > 40rem);
+@custom-media --collapsed-menu (width <= 40rem);

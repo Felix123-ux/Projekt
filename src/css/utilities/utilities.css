@@ -1,0 +1,21 @@
+.trim-child-block-margin {
+	> :first-child {
+		margin-block-start: 0;
+	}
+
+	> :last-child {
+		margin-block-end: 0;
+	}
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.lowercase {
+	text-transform: lowercase;
+}
+
+.trimmed-text {
+	text-box: trim-both cap alphabetic;
+}

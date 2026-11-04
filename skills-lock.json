@@ -1,0 +1,17 @@
+{
+	"version": 1,
+	"skills": {
+		"modern-web-guidance": {
+			"source": "GoogleChrome/modern-web-guidance",
+			"sourceType": "github",
+			"skillPath": "skills/modern-web-guidance/SKILL.md",
+			"computedHash": "8e91867cc20dda14251c78c8d905847314c8c196557e1181d586a456cddcb5dc"
+		},
+		"zod": {
+			"source": "anivar/zod-skill",
+			"sourceType": "github",
+			"skillPath": "SKILL.md",
+			"computedHash": "580ef0ceb6f98c541c8944d304707335bd8d29e04a05fcc1229b089a9253a4d0"
+		}
+	}
+}

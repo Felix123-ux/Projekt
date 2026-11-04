@@ -1,0 +1,94 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"formatter": {
+		"enabled": true
+	},
+	"css": {
+		"formatter": { "quoteStyle": "single" },
+		"parser": {
+			"cssModules": true
+		}
+	},
+	"javascript": {
+		"formatter": { "quoteStyle": "single" }
+	},
+	"html": {
+		"formatter": {
+			"enabled": true,
+			"selfCloseVoidElements": "never"
+		}
+	},
+	"json": {
+		"parser": {
+			"allowComments": true
+		}
+	},
+	"linter": {
+		"domains": {
+			"project": "recommended",
+			"react": "recommended"
+		},
+		"rules": {
+			"correctness": {
+				"noUndeclaredVariables": "error",
+				"noUnknownProperty": {
+					"level": "warn",
+					"options": {
+						/* Ignore (allow) new or experimental CSS properties */
+						"ignore": []
+					}
+				},
+				"noUnknownFunction": {
+					"level": "warn",
+					"options": {
+						/* Ignore (allow) new or experimental CSS functions */
+						"ignore": []
+					}
+				},
+				"noUnknownMediaFeatureName": "off",
+				/* Allow React children prop, e.g. for base-ui. */
+				"noChildrenProp": "off"
+			},
+			"suspicious": {
+				"noVar": "error",
+				"noUnknownAtRules": {
+					"level": "warn",
+					"options": {
+						"ignore": ["custom-media"]
+					}
+				},
+				"noUnknownAttribute": {
+					"level": "error",
+					"options": {
+						"ignore": ["switch"]
+					}
+				}
+			},
+			"style": {
+				"useShorthandAssign": "error",
+				"useConsistentObjectDefinitions": "on",
+				"noNonNullAssertion": "off"
+			},
+			"complexity": {
+				// Prevent conflict with TS "noPropertyAccessFromIndexSignature" rule
+				"useLiteralKeys": "off"
+			},
+			"security": {
+				"noDangerouslySetInnerHtml": "warn"
+			},
+			"nursery": {}
+		}
+	},
+	"files": {
+		"includes": [
+			"**/*.{js,jsx,ts,tsx,cjs,mjs,css,html,json,jsonc,graphql}",
+			"!!**/dist"
+		]
+	},
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true,
+		"defaultBranch": "main"
+	}
+}

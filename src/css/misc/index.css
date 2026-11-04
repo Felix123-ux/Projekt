@@ -1,0 +1,22 @@
+/* Miscellaneous */
+
+/* @import 'fade-container-in.css'; */
+
+/* Opt-in the whole page to interpolate sizes to/from keywords
+ https://developer.chrome.com/docs/css-ui/animate-to-height-auto
+ */
+:root {
+	interpolate-size: allow-keywords;
+}
+
+/* Enable multi-page view transitions */
+@media not (prefers-reduced-motion: reduce) {
+	@view-transition {
+		navigation: auto;
+	}
+}
+
+/* Disable scrolling when a dialog is open */
+body:has(dialog:modal) {
+	overflow: hidden;
+}

@@ -1,0 +1,148 @@
+:root {
+	--content-padding: 0.5rem;
+	/* Keep content-width in sync contentSize with theme.json */
+	--content-width: 60rem;
+	--max-width-l: 70rem;
+	--max-width-m: 50rem;
+	--max-width-s: 44rem;
+
+	--border-radius-xs: 4px;
+	--border-radius-s: 8px;
+	--border-radius-m: 16px;
+	--border-radius-l: 24px;
+	--border-radius-xl: 32px;
+}
+
+/* @link https://utopia.fyi/type/calculator?c=360,16,1.067,1220,18,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l|2xs-s&g=s,l,xl,12 */
+
+:root {
+	/* Step -2: 14.0537px → 11.52px */
+	--_step--2: clamp(0.72rem, 0.9446rem + -0.2946vw, 0.8784rem);
+	/* Step -1: 14.9953px → 14.4px */
+	--_step--1: clamp(0.9rem, 0.9528rem + -0.0692vw, 0.9372rem);
+	/* Step 0: 16px → 18px */
+	--_step-0: clamp(1rem, 0.9477rem + 0.2326vw, 1.125rem);
+	/* Step 1: 17.072px → 22.5px */
+	--_step-1: clamp(1.067rem, 0.925rem + 0.6312vw, 1.4063rem);
+	/* Step 2: 18.2158px → 28.125px */
+	--_step-2: clamp(1.1385rem, 0.8792rem + 1.1522vw, 1.7578rem);
+	/* Step 3: 19.4363px → 35.1563px */
+	--_step-3: clamp(1.2148rem, 0.8035rem + 1.8279vw, 2.1973rem);
+	/* Step 4: 20.7385px → 43.9453px */
+	--_step-4: clamp(1.2962rem, 0.689rem + 2.6985vw, 2.7466rem);
+	/* Step 5: 22.128px → 54.9316px */
+	--_step-5: clamp(1.383rem, 0.5248rem + 3.8144vw, 3.4332rem);
+
+	--step--1: round(down, var(--_step--1), 1px);
+	--step--2: round(down, var(--_step--2), 1px);
+	--step-0: round(down, var(--_step-0), 1px);
+	--step-1: round(down, var(--_step-1), 1px);
+	--step-2: round(down, var(--_step-2), 1px);
+	--step-3: round(down, var(--_step-3), 1px);
+	--step-4: round(down, var(--_step-4), 1px);
+	--step-5: round(down, var(--_step-5), 1px);
+
+	/* Can be removed with Safari 16 support.
+	 https://caniuse.com/?search=round */
+	@supports not (font-size: round(down, 10px, 1px)) {
+		--step--1: var(--_step--1);
+		--step--2: var(--_step--2);
+		--step-0: var(--_step-0);
+		--step-1: var(--_step-1);
+		--step-2: var(--_step-2);
+		--step-3: var(--_step-3);
+		--step-4: var(--_step-4);
+		--step-5: var(--_step-5);
+	}
+}
+
+/* @link https://utopia.fyi/space/calculator?c=360,16,1.067,1220,18,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l|2xs-s&g=s,l,xl,12 */
+
+:root {
+	/* Space 3xs: 4px → 5px */
+	--_space-3xs: clamp(4px, 3.5814px + 0.1163vw, 5px);
+	/* Space 2xs: 8px → 9px */
+	--_space-2xs: clamp(8px, 7.5814px + 0.1163vw, 9px);
+	/* Space xs: 12px → 14px */
+	--_space-xs: clamp(12px, 11.1628px + 0.2326vw, 14px);
+	/* Space s: 16px → 18px */
+	--_space-s: clamp(16px, 15.1628px + 0.2326vw, 18px);
+	/* Space m: 24px → 27px */
+	--_space-m: clamp(24px, 22.7442px + 0.3488vw, 27px);
+	/* Space l: 32px → 36px */
+	--_space-l: clamp(32px, 30.3256px + 0.4651vw, 36px);
+	/* Space xl: 48px → 54px */
+	--_space-xl: clamp(48px, 45.4884px + 0.6977vw, 54px);
+	/* Space 2xl: 64px → 72px */
+	--_space-2xl: clamp(64px, 60.6512px + 0.9302vw, 72px);
+	/* Space 3xl: 96px → 108px */
+	--_space-3xl: clamp(96px, 90.9767px + 1.3953vw, 108px);
+
+	/* One-up pairs */
+	/* Space 3xs-2xs: 4px → 9px */
+	--_space-3xs-2xs: clamp(4px, 1.907px + 0.5814vw, 9px);
+	/* Space 2xs-xs: 8px → 14px */
+	--_space-2xs-xs: clamp(8px, 5.4884px + 0.6977vw, 14px);
+	/* Space xs-s: 12px → 18px */
+	--_space-xs-s: clamp(12px, 9.4884px + 0.6977vw, 18px);
+	/* Space s-m: 16px → 27px */
+	--_space-s-m: clamp(16px, 11.3953px + 1.2791vw, 27px);
+	/* Space m-l: 24px → 36px */
+	--_space-m-l: clamp(24px, 18.9767px + 1.3953vw, 36px);
+	/* Space l-xl: 32px → 54px */
+	--_space-l-xl: clamp(32px, 22.7907px + 2.5581vw, 54px);
+	/* Space xl-2xl: 48px → 72px */
+	--_space-xl-2xl: clamp(48px, 37.9535px + 2.7907vw, 72px);
+	/* Space 2xl-3xl: 64px → 108px */
+	--_space-2xl-3xl: clamp(64px, 45.5814px + 5.1163vw, 108px);
+
+	/* Custom pairs */
+	/* Space s-l: 16px → 36px */
+	--_space-s-l: clamp(16px, 7.6279px + 2.3256vw, 36px);
+	/* Space 2xs-s: 8px → 18px */
+	--_space-2xs-s: clamp(8px, 3.814px + 1.1628vw, 18px);
+
+	--space-3xs: round(down, var(--_space-3xs), 1px);
+	--space-2xs: round(down, var(--_space-2xs), 1px);
+	--space-xs: round(down, var(--_space-xs), 1px);
+	--space-s: round(down, var(--_space-s), 1px);
+	--space-m: round(down, var(--_space-m), 1px);
+	--space-l: round(down, var(--_space-l), 1px);
+	--space-xl: round(down, var(--_space-xl), 1px);
+	--space-2xl: round(down, var(--_space-2xl), 1px);
+	--space-3xl: round(down, var(--_space-3xl), 1px);
+	--space-3xs-2xs: round(down, var(--_space-3xs-2xs), 1px);
+	--space-2xs-xs: round(down, var(--_space-2xs-xs), 1px);
+	--space-xs-s: round(down, var(--_space-xs-s), 1px);
+	--space-s-m: round(down, var(--_space-s-m), 1px);
+	--space-m-l: round(down, var(--_space-m-l), 1px);
+	--space-l-xl: round(down, var(--_space-l-xl), 1px);
+	--space-xl-2xl: round(down, var(--_space-xl-2xl), 1px);
+	--space-2xl-3xl: round(down, var(--_space-2xl-3xl), 1px);
+	--space-s-l: round(down, var(--_space-s-l), 1px);
+	--space-2xs-s: round(down, var(--_space-2xs-s), 1px);
+
+	/* Can be removed with Safari 16 support.
+ https://caniuse.com/?search=round */
+	@supports not (font-size: round(down, 10px, 1px)) {
+		--space-3xs: var(--_space-3xs);
+		--space-2xs: var(--_space-2xs);
+		--space-xs: var(--_space-xs);
+		--space-s: var(--_space-s);
+		--space-m: var(--_space-m);
+		--space-l: var(--_space-l);
+		--space-xl: var(--_space-xl);
+		--space-2xl: var(--_space-2xl);
+		--space-3xl: var(--_space-3xl);
+		--space-3xs-2xs: var(--_space-3xs-2xs);
+		--space-2xs-xs: var(--_space-2xs-xs);
+		--space-xs-s: var(--_space-xs-s);
+		--space-s-m: var(--_space-s-m);
+		--space-m-l: var(--_space-m-l);
+		--space-l-xl: var(--_space-l-xl);
+		--space-xl-2xl: var(--_space-xl-2xl);
+		--space-2xl-3xl: var(--_space-2xl-3xl);
+		--space-s-l: var(--_space-s-l);
+		--space-2xs-s: var(--_space-2xs-s);
+	}
+}

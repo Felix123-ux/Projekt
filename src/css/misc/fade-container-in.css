@@ -1,0 +1,13 @@
+.js {
+	.fade-in-container {
+		transition: opacity 0.3s;
+
+		&[data-initialized='false'] {
+			opacity: 0;
+		}
+
+		&[data-initialized='true'] {
+			opacity: 1;
+		}
+	}
+}

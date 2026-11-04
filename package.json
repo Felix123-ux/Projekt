@@ -1,0 +1,19 @@
+{
+	"type": "module",
+	"scripts": {
+		"dev": "vite --host",
+		"build": "tsc && vite build",
+		"preview": "vite preview",
+		"check": "biome check"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.6.2",
+		"@total-typescript/ts-reset": "^0.6.1",
+		"typescript": "^7.0.2",
+		"vite": "^8.3.5"
+	},
+	"dependencies": {
+		"es-toolkit": "^1.52.0",
+		"zod": "^4.6.7"
+	}
+}

@@ -1,0 +1,37 @@
+dfn,
+cite,
+em,
+i {
+	font-style: italic;
+}
+
+blockquote {
+	margin: 0 1.5em;
+}
+
+.wwb-dialog {
+	padding: 0;
+	border: none;
+
+	&::backdrop {
+		background-color: rgb(0 0 0 / 0.8);
+	}
+}
+
+/* https://css-tricks.com/two-issues-styling-the-details-element-and-how-to-solve-them/ */
+:where(details summary) {
+	cursor: pointer;
+
+	> * {
+		display: inline;
+	}
+}
+
+.no-marker-summary {
+	list-style: none;
+
+	&::-webkit-details-marker {
+		/* https://caniuse.com/mdn-html_elements_summary_display_list_item */
+		display: none;
+	}
+}

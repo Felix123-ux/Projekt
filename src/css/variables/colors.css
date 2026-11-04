@@ -1,0 +1,10 @@
+:root {
+	--black: #333;
+
+	--theme-text-color: var(--black);
+	--theme-accent-color: unset;
+	--theme-link-color: var(--black);
+	--theme-link-color-active: var(--black);
+	--theme-link-color-visited: var(--black);
+	--theme-outline-color: var(--black);
+}
