@@ -36,6 +36,91 @@ type CartItem = {
 
 const cart: CartItem[] = [];
 
+const cartSection = document.createElement('section');
+cartSection.className = 'cart';
+cartSection.setAttribute('aria-labelledby', 'cart-heading');
+
+const cartHeading = document.createElement('h2');
+cartHeading.id = 'cart-heading';
+cartHeading.className = 'cart__heading';
+cartHeading.textContent = 'Warenkorb';
+cartHeading.tabIndex = -1;
+
+const cartEmpty = document.createElement('p');
+cartEmpty.textContent = 'Dein Warenkorb ist leer.';
+
+const cartList = document.createElement('ul');
+cartList.className = 'cart__list';
+
+const cartTotal = document.createElement('p');
+cartTotal.className = 'cart__total';
+
+cartSection.append(cartHeading, cartEmpty, cartList, cartTotal);
+root.append(cartSection);
+
+function renderCart(): void {
+	const rows = cart.map((item) => {
+		const row = document.createElement('li');
+		row.className = 'cart__item';
+
+		const description = document.createElement('span');
+		description.className = 'cart__description';
+
+		const unitPriceInCents = Math.round(item.product.price * 100);
+		const itemTotalInCents = unitPriceInCents * item.quantity;
+
+		description.textContent =
+			`${item.quantity} × ${item.product.title} – ` +
+			priceFormatter.format(itemTotalInCents / 100);
+
+		const removeButton = document.createElement('button');
+		removeButton.type = 'button';
+		removeButton.className = 'cart__remove';
+		removeButton.textContent = 'Entfernen';
+		removeButton.setAttribute(
+			'aria-label',
+			`${item.product.title} vollständig aus dem Warenkorb entfernen`,
+		);
+
+		removeButton.addEventListener('click', () => {
+			removeFromCart(item.product.id);
+		});
+
+		row.append(description, removeButton);
+
+		return row;
+	});
+
+	cartList.replaceChildren(...rows);
+
+	const totalInCents = cart.reduce(
+		(total, item) =>
+			total + Math.round(item.product.price * 100) * item.quantity,
+		0,
+	);
+
+	cartEmpty.hidden = cart.length > 0;
+	cartList.hidden = cart.length === 0;
+	cartTotal.hidden = cart.length === 0;
+	cartTotal.textContent = `Gesamt: ${priceFormatter.format(totalInCents / 100)}`;
+}
+
+function removeFromCart(productId: number): void {
+	const index = cart.findIndex((item) => item.product.id === productId);
+	const item = cart[index];
+
+	if (!item) {
+		throw new Error(`Artikel ${productId} ist nicht im Warenkorb.`);
+	}
+
+	cart.splice(index, 1);
+	renderCart();
+
+	cartHeading.focus();
+
+	status.textContent = `${item.product.title} wurde aus dem Warenkorb entfernt.`;
+}
+
 function addToCart(product: Product): void {
 	const existingItem = cart.find((item) => item.product.id === product.id);
 
@@ -47,6 +132,7 @@ function addToCart(product: Product): void {
 			quantity: 1,
 		});
 	}
+	renderCart();
 
 	const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -172,4 +258,5 @@ async function loadProducts(
 	}
 }
 
+renderCart();
 void loadProducts(status, categoryNav);
