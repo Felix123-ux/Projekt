@@ -1,4 +1,9 @@
-import { type Product, ProductsSchema } from './types';
+import {
+	type CartItem,
+	CartSchema,
+	type Product,
+	ProductsSchema,
+} from './types';
 
 const root = document.querySelector<HTMLElement>('#root');
 
@@ -29,11 +34,6 @@ const priceFormatter = new Intl.NumberFormat('de-DE', {
 	currency: 'USD',
 });
 
-type CartItem = {
-	product: Product;
-	quantity: number;
-};
-
 const cart: CartItem[] = [];
 
 const cartSection = document.createElement('section');
@@ -56,7 +56,55 @@ const cartTotal = document.createElement('p');
 cartTotal.className = 'cart__total';
 
 cartSection.append(cartHeading, cartEmpty, cartList, cartTotal);
+const storageMessage = document.createElement('p');
+storageMessage.setAttribute('role', 'status');
+
+cartSection.append(storageMessage);
 root.append(cartSection);
+
+const CART_STORAGE_KEY = 'webshop-cart-v1';
+
+function saveCart(): void {
+	try {
+		const serializedCart = JSON.stringify(cart);
+
+		localStorage.setItem(CART_STORAGE_KEY, serializedCart);
+		storageMessage.textContent = '';
+	} catch (error) {
+		console.error('Warenkorb konnte nicht gespeichert werden:', error);
+
+		storageMessage.textContent =
+			'Der Warenkorb konnte nicht gespeichert werden. ' +
+			'Deine Änderungen gelten nur bis zum nächsten Seitenwechsel.';
+	}
+}
+
+function restoreCart(): void {
+	try {
+		const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+
+		if (savedCart === null) {
+			return;
+		}
+
+		const data: unknown = JSON.parse(savedCart);
+		const result = CartSchema.safeParse(data);
+
+		if (!result.success) {
+			throw new Error('Die gespeicherten Warenkorbdaten sind ungültig.', {
+				cause: result.error,
+			});
+		}
+
+		cart.push(...result.data);
+	} catch (error) {
+		console.error('Warenkorb konnte nicht wiederhergestellt werden:', error);
+
+		storageMessage.textContent =
+			'Der gespeicherte Warenkorb konnte nicht geladen werden. ' +
+			'Du startest deshalb mit einem leeren Warenkorb.';
+	}
+}
 
 function renderCart(): void {
 	const rows = cart.map((item) => {
@@ -114,6 +162,7 @@ function removeFromCart(productId: number): void {
 	}
 
 	cart.splice(index, 1);
+	saveCart();
 	renderCart();
 
 	cartHeading.focus();
@@ -132,6 +181,7 @@ function addToCart(product: Product): void {
 			quantity: 1,
 		});
 	}
+	saveCart();
 	renderCart();
 
 	const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
@@ -258,5 +308,6 @@ async function loadProducts(
 	}
 }
 
+restoreCart();
 renderCart();
 void loadProducts(status, categoryNav);

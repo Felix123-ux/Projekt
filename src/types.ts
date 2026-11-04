@@ -16,3 +16,12 @@ export const ProductSchema = z.object({
 export const ProductsSchema = z.array(ProductSchema);
 
 export type Product = z.infer<typeof ProductSchema>;
+
+export const CartItemSchema = z.object({
+	product: ProductSchema,
+	quantity: z.number().int().positive(),
+});
+
+export const CartSchema = z.array(CartItemSchema);
+
+export type CartItem = z.infer<typeof CartItemSchema>;
