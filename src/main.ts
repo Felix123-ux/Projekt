@@ -6,8 +6,15 @@ if (!root) {
 	throw new Error('Das Element #root wurde nicht gefunden.');
 }
 
-const heading = document.createElement('h1');
-heading.textContent = 'Mein Webshop';
+const categoryNav = document.querySelector<HTMLElement>('#categories');
+
+if (!categoryNav) {
+	throw new Error('Die Kategorienavigation wurde nicht gefunden.');
+}
+
+const selectedCategory = new URLSearchParams(window.location.search).get(
+	'category',
+);
 
 const status = document.createElement('p');
 status.setAttribute('role', 'status');
@@ -15,7 +22,7 @@ status.setAttribute('role', 'status');
 const productList = document.createElement('div');
 productList.className = 'products';
 
-root.append(heading, status, productList);
+root.append(status, productList);
 
 const priceFormatter = new Intl.NumberFormat('de-DE', {
 	style: 'currency',
@@ -44,8 +51,50 @@ function createProductCard(product: Product): HTMLElement {
 	return card;
 }
 
+function renderCategories(products: Product[], container: HTMLElement): void {
+	const categories = [...new Set(products.map((product) => product.category))];
+
+	const list = document.createElement('ul');
+	list.className = 'category-nav__list';
+
+	function addLink(label: string, category: string | null): void {
+		const item = document.createElement('li');
+		item.className = 'category-nav__item';
+
+		const link = document.createElement('a');
+		link.className = 'category-nav__link';
+		link.textContent = label;
+
+		const url = new URL(window.location.href);
+
+		if (category === null) {
+			url.searchParams.delete('category');
+		} else {
+			url.searchParams.set('category', category);
+		}
+
+		link.href = url.href;
+
+		if (selectedCategory === category) {
+			link.setAttribute('aria-current', 'page');
+		}
+
+		item.append(link);
+		list.append(item);
+	}
+
+	addLink('Alle Produkte', null);
+
+	for (const category of categories) {
+		addLink(category, category);
+	}
+
+	container.replaceChildren(list);
+}
+
 async function loadProducts(
 	statusElement: HTMLParagraphElement,
+	navigationElement: HTMLElement,
 ): Promise<void> {
 	statusElement.textContent = 'Produkte werden geladen …';
 
@@ -64,14 +113,22 @@ async function loadProducts(
 			});
 		}
 		const products = result.data;
-		const cards = products.map(createProductCard);
+
+		renderCategories(products, navigationElement);
+
+		const filteredProducts =
+			selectedCategory === null
+				? products
+				: products.filter((product) => product.category === selectedCategory);
+
+		const cards = filteredProducts.map(createProductCard);
 
 		productList.replaceChildren(...cards);
 
 		statusElement.textContent =
-			products.length === 0
-				? 'Keine Produkte vorhanden.'
-				: `${products.length} Produkte geladen.`;
+			filteredProducts.length === 0
+				? 'Keine Produkte für diese Auswahl gefunden.'
+				: `${filteredProducts.length} Produkte angezeigt.`;
 	} catch (error) {
 		console.error('Produkte konnten nicht geladen werden:', error);
 		statusElement.textContent =
@@ -79,4 +136,4 @@ async function loadProducts(
 	}
 }
 
-void loadProducts(status);
+void loadProducts(status, categoryNav);
