@@ -17,11 +17,13 @@ if (!categoryNav) {
 	throw new Error('Die Kategorienavigation wurde nicht gefunden.');
 }
 
+// Ohne Kategorieparameter liefert get() null: Dann werden alle Produkte angezeigt.
 const selectedCategory = new URLSearchParams(window.location.search).get(
 	'category',
 );
 
 const status = document.createElement('p');
+// Statusänderungen können von Screenreadern angekündigt werden.
 status.setAttribute('role', 'status');
 
 const productList = document.createElement('div');
@@ -34,6 +36,7 @@ const priceFormatter = new Intl.NumberFormat('de-DE', {
 	currency: 'USD',
 });
 
+// Dieses Array ist die Datenquelle; die Warenkorbanzeige wird daraus neu aufgebaut.
 const cart: CartItem[] = [];
 
 const cartSection = document.createElement('section');
@@ -44,6 +47,7 @@ const cartHeading = document.createElement('h2');
 cartHeading.id = 'cart-heading';
 cartHeading.className = 'cart__heading';
 cartHeading.textContent = 'Warenkorb';
+// Nach dem Entfernen per Code fokussierbar, aber kein zusätzlicher Tab-Stopp.
 cartHeading.tabIndex = -1;
 
 const cartEmpty = document.createElement('p');
@@ -64,6 +68,9 @@ root.append(cartSection);
 
 const CART_STORAGE_KEY = 'webshop-cart-v1';
 
+/**
+ * Speichert den Warenkorb als JSON; Speicherfehler werden abgefangen und angezeigt.
+ */
 function saveCart(): void {
 	try {
 		const serializedCart = JSON.stringify(cart);
@@ -79,6 +86,10 @@ function saveCart(): void {
 	}
 }
 
+/**
+ * Liest und prüft den gespeicherten Warenkorb beim Start.
+ * Fehler beim Speicherzugriff, JSON-Lesen oder Validieren werden angezeigt.
+ */
 function restoreCart(): void {
 	try {
 		const savedCart = localStorage.getItem(CART_STORAGE_KEY);
@@ -87,6 +98,7 @@ function restoreCart(): void {
 			return;
 		}
 
+		// Auch Browserdaten können verändert sein: Erst nach der Zod-Prüfung vertrauen.
 		const data: unknown = JSON.parse(savedCart);
 		const result = CartSchema.safeParse(data);
 
@@ -106,6 +118,9 @@ function restoreCart(): void {
 	}
 }
 
+/**
+ * Baut die Warenkorbliste neu auf und aktualisiert Leerzustand und Gesamtpreis.
+ */
 function renderCart(): void {
 	const rows = cart.map((item) => {
 		const row = document.createElement('li');
@@ -114,6 +129,7 @@ function renderCart(): void {
 		const description = document.createElement('span');
 		description.className = 'cart__description';
 
+		// Mit ganzen Cent rechnen und erst zur Anzeige in Dollar zurückwandeln.
 		const unitPriceInCents = Math.round(item.product.price * 100);
 		const itemTotalInCents = unitPriceInCents * item.quantity;
 
@@ -153,6 +169,11 @@ function renderCart(): void {
 	cartTotal.textContent = `Gesamt: ${priceFormatter.format(totalInCents / 100)}`;
 }
 
+/**
+ * Entfernt einen gesamten Warenkorbeintrag einschließlich seiner Menge.
+ * @param productId - ID des zu entfernenden Produkts.
+ * @throws {Error} Wenn die Produkt-ID nicht im Warenkorb vorhanden ist.
+ */
 function removeFromCart(productId: number): void {
 	const index = cart.findIndex((item) => item.product.id === productId);
 	const item = cart[index];
@@ -165,11 +186,16 @@ function removeFromCart(productId: number): void {
 	saveCart();
 	renderCart();
 
+	// Der angeklickte Button wurde entfernt; der Fokus erhält ein neues Ziel.
 	cartHeading.focus();
 
 	status.textContent = `${item.product.title} wurde aus dem Warenkorb entfernt.`;
 }
 
+/**
+ * Fügt ein Produkt hinzu oder erhöht die Menge eines vorhandenen Eintrags.
+ * @param product - Das hinzuzufügende Produkt.
+ */
 function addToCart(product: Product): void {
 	const existingItem = cart.find((item) => item.product.id === product.id);
 
@@ -191,6 +217,11 @@ function addToCart(product: Product): void {
 		`Artikel im Warenkorb: ${totalQuantity}.`;
 }
 
+/**
+ * Erstellt eine Produktkarte mit Bild, Titel, Preis und Warenkorb-Button.
+ * @param product - Geprüfte Produktdaten aus der API.
+ * @returns Die fertige Karte zum Einfügen in die Produktliste.
+ */
 function createProductCard(product: Product): HTMLElement {
 	const card = document.createElement('article');
 	card.className = 'product';
@@ -215,6 +246,7 @@ function createProductCard(product: Product): HTMLElement {
 	buyButton.setAttribute('aria-label', `${product.title} in den Warenkorb`);
 
 	buyButton.addEventListener('click', () => {
+		// Die Klickfunktion behält Zugriff auf das Produkt dieser Karte (Closure).
 		addToCart(product);
 	});
 
@@ -223,12 +255,25 @@ function createProductCard(product: Product): HTMLElement {
 	return card;
 }
 
+/**
+ * Erstellt Kategorie-Links aus der vollständigen Produktliste.
+ * @param products - Produkte, aus denen die Kategorien ermittelt werden.
+ * @param container - Navigationselement, dessen Inhalt ersetzt wird.
+ */
 function renderCategories(products: Product[], container: HTMLElement): void {
+	// Set entfernt doppelte Kategorien; die Spread-Syntax erzeugt daraus ein Array.
 	const categories = [...new Set(products.map((product) => product.category))];
 
 	const list = document.createElement('ul');
 	list.className = 'category-nav__list';
 
+	/**
+	 * Ergänzt einen Link und kennzeichnet die aktuelle Kategorie.
+	 * @param label - Sichtbare Beschriftung des Links.
+	 * @param category - API-Kategorie oder null für alle Produkte.
+	 * @example addLink('Alle Produkte', null);
+	 * @example addLink('Elektronik', 'electronics');
+	 */
 	function addLink(label: string, category: string | null): void {
 		const item = document.createElement('li');
 		item.className = 'category-nav__item';
@@ -237,6 +282,7 @@ function renderCategories(products: Product[], container: HTMLElement): void {
 		link.className = 'category-nav__link';
 		link.textContent = label;
 
+		// searchParams kodiert Sonderzeichen und erhält andere URL-Parameter.
 		const url = new URL(window.location.href);
 
 		if (category === null) {
@@ -264,6 +310,12 @@ function renderCategories(products: Product[], container: HTMLElement): void {
 	container.replaceChildren(list);
 }
 
+/**
+ * Lädt und prüft Produkte und zeigt die zur URL-Kategorie passenden Karten an.
+ * Netzwerk-, HTTP- und Validierungsfehler werden abgefangen und angezeigt.
+ * @param statusElement - Textfeld für Ladezustand, Ergebnis oder Fehlermeldung.
+ * @param navigationElement - Container für die Kategorie-Links.
+ */
 async function loadProducts(
 	statusElement: HTMLParagraphElement,
 	navigationElement: HTMLElement,
@@ -273,6 +325,7 @@ async function loadProducts(
 	try {
 		const response = await fetch('https://fakestoreapi.com/products');
 
+		// fetch wirft bei HTTP-Fehlern wie 404 nicht selbst: Status explizit prüfen.
 		if (!response.ok) {
 			throw new Error(`HTTP-Fehler: ${response.status}`);
 		}
@@ -308,6 +361,8 @@ async function loadProducts(
 	}
 }
 
+// Gespeicherte Daten zuerst wiederherstellen, damit die erste Anzeige stimmt.
 restoreCart();
 renderCart();
+// Die asynchrone Funktion behandelt ihre Ladefehler selbst.
 void loadProducts(status, categoryNav);
