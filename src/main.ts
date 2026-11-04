@@ -29,6 +29,32 @@ const priceFormatter = new Intl.NumberFormat('de-DE', {
 	currency: 'USD',
 });
 
+type CartItem = {
+	product: Product;
+	quantity: number;
+};
+
+const cart: CartItem[] = [];
+
+function addToCart(product: Product): void {
+	const existingItem = cart.find((item) => item.product.id === product.id);
+
+	if (existingItem) {
+		existingItem.quantity += 1;
+	} else {
+		cart.push({
+			product,
+			quantity: 1,
+		});
+	}
+
+	const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
+
+	status.textContent =
+		`${product.title} wurde hinzugefügt. ` +
+		`Artikel im Warenkorb: ${totalQuantity}.`;
+}
+
 function createProductCard(product: Product): HTMLElement {
 	const card = document.createElement('article');
 	card.className = 'product';
@@ -46,7 +72,17 @@ function createProductCard(product: Product): HTMLElement {
 	price.className = 'product__price';
 	price.textContent = priceFormatter.format(product.price);
 
-	card.append(image, title, price);
+	const buyButton = document.createElement('button');
+	buyButton.type = 'button';
+	buyButton.className = 'product__buy';
+	buyButton.textContent = 'In den Warenkorb';
+	buyButton.setAttribute('aria-label', `${product.title} in den Warenkorb`);
+
+	buyButton.addEventListener('click', () => {
+		addToCart(product);
+	});
+
+	card.append(image, title, price, buyButton);
 
 	return card;
 }

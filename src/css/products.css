@@ -40,3 +40,25 @@
 	font-size: var(--step-1);
 	font-weight: 700;
 }
+
+.product__buy {
+	--theme-button-color: #fff;
+	--theme-button-background: #174ea6;
+	--theme-button-border: #174ea6;
+	--theme-button-color-active: #fff;
+	--theme-button-background-active: #103b80;
+	--theme-button-border-active: #103b80;
+
+	min-height: 44px;
+	padding: 0.75rem 1rem;
+	border-radius: var(--border-radius-s);
+	font: inherit;
+	font-weight: 700;
+	line-height: 1.4;
+	cursor: pointer;
+}
+
+.product__buy:focus-visible {
+	outline: 3px solid #174ea6;
+	outline-offset: 3px;
+}
